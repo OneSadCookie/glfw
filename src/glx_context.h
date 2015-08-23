@@ -111,7 +111,7 @@ typedef XVisualInfo* (*PFNGLXGETVISUALFROMFBCONFIGPROC)(Display*,GLXFBConfig);
 //
 typedef struct _GLFWcontextGLX
 {
-    GLXContext      context;
+    GLXContext      handle;
 
 } _GLFWcontextGLX;
 
