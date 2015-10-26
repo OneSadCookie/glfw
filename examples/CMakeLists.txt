@@ -17,6 +17,8 @@ elseif (APPLE)
     set(ICON glfw.icns)
     set_source_files_properties(glfw.icns PROPERTIES
         MAXOSX_PACKAGE_LOCATION "Resources")
+    find_library(METAL_FRAMEWORK Metal)
+    find_library(QUARTZCORE_FRAMEWORK QuartzCore)
 endif()
 
 set(GLAD "${GLFW_SOURCE_DIR}/deps/glad/glad.h"
@@ -29,11 +31,15 @@ set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
 add_executable(boing WIN32 MACOSX_BUNDLE boing.c ${ICON} ${GLAD})
 add_executable(gears WIN32 MACOSX_BUNDLE gears.c ${ICON} ${GLAD})
 add_executable(heightmap WIN32 MACOSX_BUNDLE heightmap.c ${ICON} ${GLAD})
+add_executable(metal MACOSX_BUNDLE metal.m ${ICON})
 add_executable(particles WIN32 MACOSX_BUNDLE particles.c ${ICON} ${TINYCTHREAD} ${GETOPT} ${GLAD})
 add_executable(simple WIN32 MACOSX_BUNDLE simple.c ${ICON} ${GLAD})
 add_executable(splitview WIN32 MACOSX_BUNDLE splitview.c ${ICON} ${GLAD})
 add_executable(wave WIN32 MACOSX_BUNDLE wave.c ${ICON} ${GLAD})
 
+target_compile_options(metal PUBLIC "-fobjc-arc")
+
+target_link_libraries(metal "${METAL_FRAMEWORK}" "${QUARTZCORE_FRAMEWORK}")
 target_link_libraries(particles "${CMAKE_THREAD_LIBS_INIT}" "${RT_LIBRARY}")
 
 set(WINDOWS_BINARIES boing gears heightmap particles simple splitview wave)
@@ -50,6 +56,7 @@ if (APPLE)
     set_target_properties(boing PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Boing")
     set_target_properties(gears PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Gears")
     set_target_properties(heightmap PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Heightmap")
+    set_target_properties(metal PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Metal")
     set_target_properties(particles PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Particles")
     set_target_properties(simple PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Simple")
     set_target_properties(splitview PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "SplitView")
